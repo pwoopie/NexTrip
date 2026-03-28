@@ -21,6 +21,27 @@ trips = {
         "nightlife": [("Hollywood", 35)],
         "nature": [("Griffith Park", 10)],
         "extras": [("The Grove", 0), ("Walk of Fame", 0), ("The Getty", 20)]
+    },
+    "las vegas": {
+        "beach": [],
+        "food": [("Bacchanal Buffet", 50), ("In-N-Out", 15)],
+        "nightlife": [("The Strip", 0), ("Fremont Street", 10)],
+        "nature": [("Red Rock Canyon", 20)],
+        "extras": [("Bellagio Fountains", 0), ("Caesars Palace", 0), ("AREA15", 35)]
+    },
+    "san francisco": {
+        "beach": [("Baker Beach", 0)],
+        "food": [("Fisherman's Wharf", 30), ("Chinatown", 20)],
+        "nightlife": [("North Beach", 25)],
+        "nature": [("Golden Gate Park", 0), ("Twin Peaks", 0)],
+        "extras": [("Pier 39", 0), ("Lombard Street", 0), ("Alamo Square", 0)]
+    },
+    "new york": {
+        "beach": [],
+        "food": [("Times Square Eats", 25), ("Katz's Delicatessen", 30)],
+        "nightlife": [("Broadway Area", 40), ("Rooftop Lounge", 35)],
+        "nature": [("Central Park", 0), ("Bryant Park", 0)],
+        "extras": [("Brooklyn Bridge", 0), ("Fifth Avenue", 0), ("Grand Central Terminal", 0)]
     }
 }
 
