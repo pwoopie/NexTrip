@@ -1,21 +1,6 @@
 import random
 
 
-def get_user_input():
-    print("Welcome to NexTrip, your Travel Planner!")
-
-    destination = input("Enter destination: ").lower().strip()
-    days = int(input("How many days is your trip? "))
-    budget = int(input("Enter your budget: "))
-    interests = input("Enter your interests (comma separated): ").lower().split(",")
-
-    cleaned_interests = []
-    for interest in interests:
-        cleaned_interests.append(interest.strip())
-
-    return destination, days, budget, cleaned_interests
-
-
 def get_trip_data():
     return {
         "san diego": {
@@ -54,6 +39,32 @@ def get_trip_data():
             "extras": [("Brooklyn Bridge", 0), ("Fifth Avenue", 0), ("Grand Central Terminal", 0)]
         }
     }
+
+
+def show_menu(trips):
+    print("Welcome to NexTrip, your Travel Planner!")
+    print("\nAvailable destinations:")
+    for city in trips:
+        print(f"- {city.title()}")
+
+    print("\nAvailable interest categories:")
+    print("- beach")
+    print("- food")
+    print("- nightlife")
+    print("- nature")
+
+
+def get_user_input():
+    destination = input("\nEnter destination: ").lower().strip()
+    days = int(input("How many days is your trip? "))
+    budget = int(input("Enter your budget: "))
+    interests = input("Enter your interests (comma separated): ").lower().split(",")
+
+    cleaned_interests = []
+    for interest in interests:
+        cleaned_interests.append(interest.strip())
+
+    return destination, days, budget, cleaned_interests
 
 
 def build_activities(destination, days, budget, interests, trips):
@@ -118,14 +129,15 @@ def print_itinerary(activities, total_cost, days):
 
 
 def main():
-    destination, days, budget, interests = get_user_input()
     trips = get_trip_data()
+    show_menu(trips)
+    destination, days, budget, interests = get_user_input()
 
     if destination in trips:
         activities, total_cost = build_activities(destination, days, budget, interests, trips)
         print_itinerary(activities, total_cost, days)
     else:
-        print("Sorry, destination not found.")
+        print("\nSorry, destination not found. Please choose from the listed destinations.")
 
 
 main()
