@@ -1,4 +1,7 @@
+from flask import Flask, render_template, request
 import random
+
+app = Flask(__name__)
 
 
 def get_trip_data():
@@ -41,52 +44,6 @@ def get_trip_data():
     }
 
 
-def show_menu(trips):
-    print("Welcome to NexTrip, your Travel Planner!")
-    print("\nAvailable destinations:")
-    for city in trips:
-        print(f"- {city.title()}")
-
-    print("\nAvailable interest categories:")
-    print("- beach")
-    print("- food")
-    print("- nightlife")
-    print("- nature")
-
-
-def get_user_input():
-    destination = input("\nEnter destination: ").lower().strip()
-
-    while True:
-        try:
-            days = int(input("How many days is your trip? "))
-            if days <= 0:
-                print("Please enter a number greater than 0.")
-                continue
-            break
-        except ValueError:
-            print("Please enter a valid whole number for days.")
-
-    while True:
-        try:
-            budget = int(input("Enter your budget: "))
-            if budget < 0:
-                print("Please enter a budget of 0 or more.")
-                continue
-            break
-        except ValueError:
-            print("Please enter a valid whole number for budget.")
-
-    interests = input("Enter your interests (comma separated): ").lower().split(",")
-
-    cleaned_interests = []
-    for interest in interests:
-        cleaned_interest = interest.strip()
-        if cleaned_interest != "":
-            cleaned_interests.append(cleaned_interest)
-
-    return destination, days, budget, cleaned_interests
-
 def build_activities(destination, days, budget, interests, trips):
     activities = []
     total_cost = 0
@@ -116,48 +73,38 @@ def build_activities(destination, days, budget, interests, trips):
     return activities, total_cost
 
 
-def print_itinerary(activities, total_cost, days):
-    if len(activities) == 0:
-        print("\nNo activities fit your budget and interests.")
-        return
-
-    print("\nYour Trip Itinerary:")
-    activity_index = 0
-
-    for day in range(1, days + 1):
-        if activity_index >= len(activities):
-            break
-
-        print(f"\nDay {day}:")
-
-        if activity_index < len(activities):
-            activity, cost = activities[activity_index]
-            print(f"Morning: {activity} (${cost})")
-            activity_index += 1
-
-        if activity_index < len(activities):
-            activity, cost = activities[activity_index]
-            print(f"Afternoon: {activity} (${cost})")
-            activity_index += 1
-
-        if activity_index < len(activities):
-            activity, cost = activities[activity_index]
-            print(f"Evening: {activity} (${cost})")
-            activity_index += 1
-
-    print(f"\nEstimated total cost: ${total_cost}")
-
-
-def main():
+@app.route("/", methods=["GET", "POST"])
+def index():
     trips = get_trip_data()
-    show_menu(trips)
-    destination, days, budget, interests = get_user_input()
+    itinerary = []
+    total_cost = None
+    error = None
 
-    if destination in trips:
-        activities, total_cost = build_activities(destination, days, budget, interests, trips)
-        print_itinerary(activities, total_cost, days)
-    else:
-        print("\nSorry, destination not found. Please choose from the listed destinations.")
+    if request.method == "POST":
+        destination = request.form["destination"].lower().strip()
+
+        try:
+            days = int(request.form["days"])
+            budget = int(request.form["budget"])
+        except ValueError:
+            error = "Days and budget must be whole numbers."
+            return render_template("index.html", trips=trips, itinerary=itinerary, total_cost=total_cost, error=error)
+
+        interests = request.form["interests"].lower().split(",")
+        cleaned_interests = []
+
+        for interest in interests:
+            cleaned_interest = interest.strip()
+            if cleaned_interest != "":
+                cleaned_interests.append(cleaned_interest)
+
+        if destination in trips:
+            itinerary, total_cost = build_activities(destination, days, budget, cleaned_interests, trips)
+        else:
+            error = "Destination not found."
+
+    return render_template("index.html", trips=trips, itinerary=itinerary, total_cost=total_cost, error=error)
 
 
-main()
+if __name__ == "__main__":
+    app.run(debug=True)

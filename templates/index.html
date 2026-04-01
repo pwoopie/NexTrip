@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <title>NexTrip</title>
+</head>
+<body>
+    <h1>Welcome to NexTrip</h1>
+    <p>Your simple travel planner</p>
+
+    <h3>Available destinations:</h3>
+    <ul>
+        {% for city in trips %}
+            <li>{{ city.title() }}</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Interest categories:</h3>
+    <ul>
+        <li>beach</li>
+        <li>food</li>
+        <li>nightlife</li>
+        <li>nature</li>
+    </ul>
+
+    <form method="POST">
+        <label>Destination:</label><br>
+        <input type="text" name="destination" required><br><br>
+
+        <label>Days:</label><br>
+        <input type="number" name="days" required><br><br>
+
+        <label>Budget:</label><br>
+        <input type="number" name="budget" required><br><br>
+
+        <label>Interests (comma separated):</label><br>
+        <input type="text" name="interests" required><br><br>
+
+        <button type="submit">Generate Trip</button>
+    </form>
+
+    {% if error %}
+        <p style="color:red;">{{ error }}</p>
+    {% endif %}
+
+    {% if itinerary %}
+        <h2>Your Trip Itinerary</h2>
+        {% for activity, cost in itinerary %}
+            <p>{{ activity }} - ${{ cost }}</p>
+        {% endfor %}
+        <h3>Estimated Total Cost: ${{ total_cost }}</h3>
+    {% endif %}
+</body>
+</html>
